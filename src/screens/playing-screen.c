@@ -380,7 +380,7 @@ void updatePlaying(void)
     }
 
     float halfW = paddleWidth() / 2.0f;
-    paddle.pos.x = clamp(targetX, halfW, SCREEN_WIDTH - halfW);
+    paddle.pos.x = clamp(targetX, cameraFieldLeft() + halfW, cameraFieldRight() - halfW);
     paddle.moveToX = -1;
   }
 
@@ -403,7 +403,7 @@ void updatePlaying(void)
 static void drawFieldDeck(void)
 {
   float y = cameraFieldBottom() - camera.y;
-  if (y >= SCREEN_HEIGHT - 1)
+  if (y >= cameraFieldHeight() - 1)
   {
     return;
   }
@@ -565,6 +565,8 @@ void drawPlaying(void)
   bool scene = beginScene();
   float savedCameraY = camera.y;
 
+  cameraApplyZoom();
+
   if (!scene)
   {
     camera.y += fx.offsetY;
@@ -585,6 +587,9 @@ void drawPlaying(void)
   drawFloatingTexts();
   drawShieldBarrier();
   drawImpactFlash();
+
+  // Everything from here is drawn at the size of the window again.
+  cameraResetZoom();
 
   camera.y = savedCameraY;
 

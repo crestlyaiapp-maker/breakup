@@ -72,6 +72,16 @@
 #define BREAKUP_RAISED_PADDLE 1
 #define PADDLE_RAISED_GAP 160
 
+// EXPERIMENT: zoom the playing field in for a phone. The field is drawn
+// 800 / (800 - 2 * 52 * PHONE_ZOOM_CUT_COLS) times bigger, which cuts that many
+// brick columns off each side of every brick level (3 columns is a zoom of
+// 1.64). The cut bricks are never created, the walls move in to the edge of
+// the picture, and the finger is mapped through the zoom. Menus, story
+// screens, the status bar and boss fights are not zoomed. Set to 0 for the
+// whole field back.
+#define BREAKUP_PHONE_ZOOM 1
+#define PHONE_ZOOM_CUT_COLS 3
+
 // The status bar is drawn over the top of the field rather than beside it, so
 // the ceiling of the world is the bottom of that panel and not the top of the
 // window.

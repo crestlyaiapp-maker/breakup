@@ -1,5 +1,9 @@
 #include "camera.h"
+#include "../bricks/brick.h"
+#include "../level-manager.h"
+#include "../level-types.h"
 #include "../paddle/paddle.h"
+#include "vector.h"
 
 // How long a full-strength shake takes to die away, how fast the frame is
 // knocked about while it does, and how far it travels at trauma 1.
@@ -77,9 +81,86 @@ void cameraShake(float *outX, float *outY, float *outAngle)
   *outAngle = SHAKE_MAX_ANGLE * shake * valueNoise(t, 3);
 }
 
+// How many brick columns are cut off each side of the level being played. The
+// zoom follows from it: what is left of the 800 is stretched to fill the screen.
+static int cutCols;
+static float zoom = 1.0f;
+
+void cameraSetLevel(int levelIndex)
+{
+  cutCols = levelCutCols(levelIndex);
+  zoom = (float)SCREEN_WIDTH /
+         (float)(SCREEN_WIDTH - 2 * cutCols * (BRICK_WIDTH + LEVEL_PATTERN_SPACING));
+}
+
+float cameraZoom(void)
+{
+  return zoom;
+}
+
+float cameraFieldLeft(void)
+{
+  return (float)(cutCols * (BRICK_WIDTH + LEVEL_PATTERN_SPACING));
+}
+
+float cameraFieldRight(void)
+{
+  return (float)SCREEN_WIDTH - cameraFieldLeft();
+}
+
+float cameraFieldHeight(void)
+{
+  return (float)SCREEN_HEIGHT / zoom;
+}
+
+bool cameraColumnInField(int col)
+{
+  return col >= cutCols && col < LEVEL_PATTERN_COLS - cutCols;
+}
+
+float cameraScreenToFieldX(float screenX)
+{
+  return cameraFieldLeft() + screenX / zoom;
+}
+
+// The scale makes every coordinate bigger about the top left, and a viewport
+// that starts left of the window moves the picture back so that the left edge
+// of the field lands on the left edge of the window.
+void cameraApplyZoom(void)
+{
+  if (zoom <= 1.0f)
+  {
+    return;
+  }
+
+  // Lines waiting to be drawn would be drawn at the new scale.
+  vecFlush();
+
+  SDL_SetRenderScale(renderer, zoom, zoom);
+
+  // Just tall enough to hold the window at the new scale, so that nothing is
+  // asked of a viewport bigger than the graphics card can make.
+  SDL_Rect view = {-(int)cameraFieldLeft(), 0, SCREEN_WIDTH,
+                   (int)ceilf(cameraFieldHeight())};
+  SDL_SetRenderViewport(renderer, &view);
+}
+
+void cameraResetZoom(void)
+{
+  if (zoom <= 1.0f)
+  {
+    return;
+  }
+
+  vecFlush();
+
+  SDL_SetRenderViewport(renderer, NULL);
+  SDL_SetRenderScale(renderer, 1.0f, 1.0f);
+}
+
 float cameraFieldBottom(void)
 {
-  float screenBottom = camera.y + SCREEN_HEIGHT;
+  float screenBottom = camera.y + cameraFieldHeight();
 #if BREAKUP_RAISED_PADDLE
   // The paddle sits 30 above the bottom of the field plus its own height; see
   // paddleYForLevel(). When it has been raised the field ends there.
@@ -95,7 +176,7 @@ float cameraFieldBottom(void)
 void initializeCamera(void)
 {
   // Position the camera so the paddle sits near the bottom of the screen
-  float startY = paddle.pos.y + PADDLE_HEIGHT + 30.0f - SCREEN_HEIGHT;
+  float startY = paddle.pos.y + PADDLE_HEIGHT + 30.0f - cameraFieldHeight();
   camera.y = startY < 0.0f ? 0.0f : startY;
   camera.prevY = camera.y;
   camera.trauma = 0;

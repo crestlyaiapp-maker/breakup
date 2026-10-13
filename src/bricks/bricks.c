@@ -486,7 +486,8 @@ void initializeBricks(void)
 
   for (int i = 0; i < LEVEL_PATTERN_LENGTH; i++)
   {
-    if (isBrickChar(currentLevel->pattern[i]))
+    if (isBrickChar(currentLevel->pattern[i]) &&
+        cameraColumnInField(i % LEVEL_PATTERN_COLS))
     {
       numBricks++;
       lastBrickRow = i / LEVEL_PATTERN_COLS;
@@ -509,7 +510,7 @@ void initializeBricks(void)
   {
     char c = currentLevel->pattern[i];
 
-    if (isBrickChar(c))
+    if (isBrickChar(c) && cameraColumnInField(x))
     {
       BrickKind kind = kindForChar(c);
 

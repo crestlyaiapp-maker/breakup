@@ -255,11 +255,11 @@ void updateEnemy(Enemy *enemy)
   // Forcing the sign cannot cancel with anything and cannot be applied twice.
   // The bricks are then free to turn the enemy back into the field, which is
   // the one direction that is always safe.
-  if (nextX < 0)
+  if (nextX < cameraFieldLeft())
   {
     enemy->vel.x = fabsf(enemy->vel.x);
   }
-  else if (nextX + size > SCREEN_WIDTH)
+  else if (nextX + size > cameraFieldRight())
   {
     enemy->vel.x = -fabsf(enemy->vel.x);
   }

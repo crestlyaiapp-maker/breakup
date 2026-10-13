@@ -37,9 +37,12 @@ static const int PADDLE_CONTENT_GAP = 100;
 // but is never higher than the screen-bottom position (camera.y=0 case)
 static int paddleYForLevel(int levelIndex)
 {
+  // The zoom is part of the level, and the height below depends on it.
+  cameraSetLevel(levelIndex);
+
   int contentBottom = getLevelContentBottom(levelIndex);
   int contentY = contentBottom + PADDLE_CONTENT_GAP;
-  int minY = SCREEN_HEIGHT - PADDLE_HEIGHT - 30;
+  int minY = (int)cameraFieldHeight() - PADDLE_HEIGHT - 30;
 #if BREAKUP_RAISED_PADDLE
   // A short level on a tall screen: follow the bricks up instead of waiting at
   // the bottom edge. Boss arenas have no bricks to follow and keep the floor.
@@ -358,7 +361,7 @@ static void updatePosition(void)
   // The paddle follows the mouse whenever it moves
   if (mouseMoved)
   {
-    paddle.moveToX = motionX;
+    paddle.moveToX = cameraScreenToFieldX((float)motionX);
   }
 
   if (paddle.moveToX >= 0)
@@ -379,13 +382,13 @@ static void updatePosition(void)
   // Prevent paddle from going out of bounds
   int halfWidth = paddleWidth() / 2;
 
-  if (paddle.pos.x - halfWidth < 0)
+  if (paddle.pos.x - halfWidth < cameraFieldLeft())
   {
-    paddle.pos.x = halfWidth;
+    paddle.pos.x = cameraFieldLeft() + halfWidth;
   }
-  else if (paddle.pos.x + halfWidth > SCREEN_WIDTH)
+  else if (paddle.pos.x + halfWidth > cameraFieldRight())
   {
-    paddle.pos.x = SCREEN_WIDTH - halfWidth;
+    paddle.pos.x = cameraFieldRight() - halfWidth;
   }
 }
 

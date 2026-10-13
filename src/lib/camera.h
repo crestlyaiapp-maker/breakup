@@ -43,6 +43,32 @@ float cameraPunch(void);
 // screen unless the paddle has been raised on a short level.
 float cameraFieldBottom(void);
 
+// PHONE ZOOM (BREAKUP_PHONE_ZOOM). The playing field is drawn `cameraZoom()`
+// times bigger around the middle of the screen, so the part of the world that
+// shows is x in [cameraFieldLeft(), cameraFieldRight()] and a height of
+// cameraFieldHeight() from camera.y. Without the zoom these are 0, 800 and
+// SCREEN_HEIGHT, and everything below does nothing.
+
+// Picks the zoom for a level. Boss levels are never zoomed.
+void cameraSetLevel(int levelIndex);
+
+float cameraZoom(void);
+float cameraFieldLeft(void);
+float cameraFieldRight(void);
+float cameraFieldHeight(void);
+
+// Whether a pattern column is inside the picture. Columns outside it have no
+// bricks and no spawners, because nothing could ever hit them.
+bool cameraColumnInField(int col);
+
+// A pointer position in the 800 x SCREEN_HEIGHT window, as a world x.
+float cameraScreenToFieldX(float screenX);
+
+// Zooms everything drawn until cameraResetZoom(). Call after beginScene() and
+// reset before the scene is composited or anything unzoomed is drawn.
+void cameraApplyZoom(void);
+void cameraResetZoom(void);
+
 void initializeCamera(void);
 
 void updateCamera(void);

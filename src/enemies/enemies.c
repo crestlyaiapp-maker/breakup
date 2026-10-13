@@ -293,7 +293,8 @@ void initializeEnemies(void)
   {
     char c = currentLevel->pattern[i];
 
-    if ((c == 'E' || c == 'V' || c == 'W' || c == 'U') && numSpawners < MAX_SPAWNERS)
+    if ((c == 'E' || c == 'V' || c == 'W' || c == 'U') && numSpawners < MAX_SPAWNERS &&
+        cameraColumnInField(x))
     {
       spawners[numSpawners] = (Spawner){
           {LEVEL_PATTERN_INDENT + x * (BRICK_WIDTH + LEVEL_PATTERN_SPACING),
@@ -334,8 +335,8 @@ static void updateEnemyBullets(void)
     // have flown off into the middle distance still holding a slot in the pool.
     if (b->pos.y > cameraFieldBottom() ||
         b->pos.y + ENEMY_BULLET_SIZE < camera.y - 40 ||
-        b->pos.x + ENEMY_BULLET_SIZE < -40 ||
-        b->pos.x > SCREEN_WIDTH + 40)
+        b->pos.x + ENEMY_BULLET_SIZE < cameraFieldLeft() - 40 ||
+        b->pos.x > cameraFieldRight() + 40)
     {
       b->active = false;
       continue;

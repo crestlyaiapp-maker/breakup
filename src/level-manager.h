@@ -20,6 +20,11 @@ int getNumberOfLevels(void);
 // music all ask before they say "WORLD n".
 bool isBossLevel(int index);
 
+// How many brick columns are cut off each side of the level when the playing
+// field is zoomed for a phone (see BREAKUP_PHONE_ZOOM). Zero on a boss level,
+// which keeps its whole width.
+int levelCutCols(int levelIndex);
+
 // Which 1-based level this is inside its world, or 0 for a boss level - those
 // have no number and the HUD says BOSS instead.
 //

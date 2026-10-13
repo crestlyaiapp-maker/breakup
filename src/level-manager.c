@@ -46,6 +46,16 @@ bool isBossLevel(int index)
   return getLevel(index)->boss > 0;
 }
 
+int levelCutCols(int levelIndex)
+{
+#if BREAKUP_PHONE_ZOOM
+  return isBossLevel(levelIndex) ? 0 : PHONE_ZOOM_CUT_COLS;
+#else
+  (void)levelIndex;
+  return 0;
+#endif
+}
+
 int worldForLevel(int level)
 {
   if (level < 0 || level >= numLevels)
@@ -329,11 +339,12 @@ int getLevelContentBottom(int levelIndex)
   }
 
   const Level *level = &levels[levelIndex];
+  int cut = levelCutCols(levelIndex);
 
   int lastRow = -1;
   for (int row = LEVEL_PATTERN_ROWS - 1; row >= 0; row--)
   {
-    for (int col = 0; col < LEVEL_PATTERN_COLS; col++)
+    for (int col = cut; col < LEVEL_PATTERN_COLS - cut; col++)
     {
       if (level->pattern[row * LEVEL_PATTERN_COLS + col] != '_')
       {

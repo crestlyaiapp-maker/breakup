@@ -200,7 +200,7 @@ void spawnExtraBall(void)
 // so that it reads as the same kind of save.
 static void rescueBall(Ball *ball)
 {
-  ball->pos.x = clamp(ball->pos.x, 0.0f, (float)(SCREEN_WIDTH - BALL_SIZE));
+  ball->pos.x = clamp(ball->pos.x, cameraFieldLeft(), cameraFieldRight() - BALL_SIZE);
   ball->pos.y = cameraFieldBottom() - BALL_SIZE - 16;
   ball->vel.y = -fabsf(ball->vel.y);
 
@@ -266,8 +266,8 @@ void initializeBalls(void)
 
 static bool isOffScreen(const Ball *ball)
 {
-  return ball->pos.x + BALL_SIZE < 0 ||
-         ball->pos.x > SCREEN_WIDTH ||
+  return ball->pos.x + BALL_SIZE < cameraFieldLeft() ||
+         ball->pos.x > cameraFieldRight() ||
          ball->pos.y > cameraFieldBottom();
 }
 

@@ -434,18 +434,18 @@ void updateBall(Ball *ball)
   float wallX = ball->pos.x + ball->vel.x * factor * (float)dt;
   float wallY = ball->pos.y + ball->vel.y * factor * (float)dt;
 
-  if (wallX < 0 && ball->vel.x < 0)
+  if (wallX < cameraFieldLeft() && ball->vel.x < 0)
   {
     ball->vel.x = fabsf(ball->vel.x);
     playSfx(SFX_BALL_WALL);
-    spawnGlowPuff(4, ball->pos.y + BALL_SIZE / 2.0f,
+    spawnGlowPuff(cameraFieldLeft() + 4, ball->pos.y + BALL_SIZE / 2.0f,
                   (SDL_Color){160, 200, 255, 255}, 26, 0.18f);
   }
-  else if (wallX + BALL_SIZE > SCREEN_WIDTH && ball->vel.x > 0)
+  else if (wallX + BALL_SIZE > cameraFieldRight() && ball->vel.x > 0)
   {
     ball->vel.x = -fabsf(ball->vel.x);
     playSfx(SFX_BALL_WALL);
-    spawnGlowPuff(SCREEN_WIDTH - 4, ball->pos.y + BALL_SIZE / 2.0f,
+    spawnGlowPuff(cameraFieldRight() - 4, ball->pos.y + BALL_SIZE / 2.0f,
                   (SDL_Color){160, 200, 255, 255}, 26, 0.18f);
   }
 
@@ -503,7 +503,7 @@ void updateBall(Ball *ball)
 float ballCameraPull(const Ball *ball)
 {
   if (!ball->active || ball->docked || camera.y <= 0 || ball->vel.y >= 0 ||
-      ball->pos.y >= camera.y + SCREEN_HEIGHT / 4.0f)
+      ball->pos.y >= camera.y + cameraFieldHeight() / 4.0f)
   {
     return 0;
   }
