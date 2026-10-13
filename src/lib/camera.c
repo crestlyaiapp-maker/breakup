@@ -77,6 +77,21 @@ void cameraShake(float *outX, float *outY, float *outAngle)
   *outAngle = SHAKE_MAX_ANGLE * shake * valueNoise(t, 3);
 }
 
+float cameraFieldBottom(void)
+{
+  float screenBottom = camera.y + SCREEN_HEIGHT;
+#if BREAKUP_RAISED_PADDLE
+  // The paddle sits 30 above the bottom of the field plus its own height; see
+  // paddleYForLevel(). When it has been raised the field ends there.
+  float paddleBottom = paddle.pos.y + PADDLE_HEIGHT + 30.0f;
+  if (paddleBottom < screenBottom)
+  {
+    return paddleBottom;
+  }
+#endif
+  return screenBottom;
+}
+
 void initializeCamera(void)
 {
   // Position the camera so the paddle sits near the bottom of the screen

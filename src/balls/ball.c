@@ -463,11 +463,11 @@ void updateBall(Ball *ball)
 
   // Barrier at the bottom
   if (shieldActive() && ball->vel.y > 0 &&
-      wallY + BALL_SIZE >= camera.y + SCREEN_HEIGHT - 14)
+      wallY + BALL_SIZE >= cameraFieldBottom() - 14)
   {
     ball->vel.y = -fabsf(ball->vel.y);
     playSfx(SFX_SHIELD);
-    spawnGlowPuff(ball->pos.x + BALL_SIZE / 2.0f, camera.y + SCREEN_HEIGHT - 14,
+    spawnGlowPuff(ball->pos.x + BALL_SIZE / 2.0f, cameraFieldBottom() - 14,
                   (SDL_Color){190, 130, 255, 255}, 60, 0.3f);
   }
 

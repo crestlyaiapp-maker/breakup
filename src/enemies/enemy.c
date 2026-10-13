@@ -223,7 +223,7 @@ void updateEnemy(Enemy *enemy)
     if (enemy->actionTimer <= 0)
     {
       // Only shoot while visible on screen
-      if (enemy->pos.y > camera.y && enemy->pos.y < camera.y + SCREEN_HEIGHT - 150)
+      if (enemy->pos.y > camera.y && enemy->pos.y < cameraFieldBottom() - 150)
       {
         spawnEnemyBullet(enemy->pos.x + size / 2.0f, enemy->pos.y + size);
         playSfx(SFX_SHOOT);
@@ -277,7 +277,7 @@ void updateEnemy(Enemy *enemy)
   }
 
   // Below the visible area: divers die quietly, others turn back up
-  if (enemy->pos.y + size > camera.y + SCREEN_HEIGHT)
+  if (enemy->pos.y + size > cameraFieldBottom())
   {
     if (diving || enemy->type == ENEMY_MINI)
     {

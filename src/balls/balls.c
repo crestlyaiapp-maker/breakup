@@ -201,7 +201,7 @@ void spawnExtraBall(void)
 static void rescueBall(Ball *ball)
 {
   ball->pos.x = clamp(ball->pos.x, 0.0f, (float)(SCREEN_WIDTH - BALL_SIZE));
-  ball->pos.y = camera.y + SCREEN_HEIGHT - BALL_SIZE - 16;
+  ball->pos.y = cameraFieldBottom() - BALL_SIZE - 16;
   ball->vel.y = -fabsf(ball->vel.y);
 
   if (fabsf(ball->vel.y) < ball->speed * 0.5f)
@@ -215,7 +215,7 @@ static void rescueBall(Ball *ball)
   }
 
   float cx = ball->pos.x + BALL_SIZE / 2.0f;
-  float cy = camera.y + SCREEN_HEIGHT - 14;
+  float cy = cameraFieldBottom() - 14;
   SDL_Color color = {110, 220, 255, 255};
 
   playSfx(SFX_SHIELD);
@@ -268,7 +268,7 @@ static bool isOffScreen(const Ball *ball)
 {
   return ball->pos.x + BALL_SIZE < 0 ||
          ball->pos.x > SCREEN_WIDTH ||
-         ball->pos.y > camera.y + SCREEN_HEIGHT;
+         ball->pos.y > cameraFieldBottom();
 }
 
 void updateBalls(void)

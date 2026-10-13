@@ -37,8 +37,21 @@ static const int PADDLE_CONTENT_GAP = 100;
 // but is never higher than the screen-bottom position (camera.y=0 case)
 static int paddleYForLevel(int levelIndex)
 {
-  int contentY = getLevelContentBottom(levelIndex) + PADDLE_CONTENT_GAP;
+  int contentBottom = getLevelContentBottom(levelIndex);
+  int contentY = contentBottom + PADDLE_CONTENT_GAP;
   int minY = SCREEN_HEIGHT - PADDLE_HEIGHT - 30;
+#if BREAKUP_RAISED_PADDLE
+  // A short level on a tall screen: follow the bricks up instead of waiting at
+  // the bottom edge. Boss arenas have no bricks to follow and keep the floor.
+  if (!isBossLevel(levelIndex))
+  {
+    int raisedY = contentBottom + PADDLE_RAISED_GAP;
+    if (raisedY < minY)
+    {
+      minY = raisedY;
+    }
+  }
+#endif
   return contentY > minY ? contentY : minY;
 }
 

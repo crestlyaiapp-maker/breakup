@@ -189,7 +189,7 @@ void updateBrickItems(void)
       item->pos.x += clamp(dx, -step, step);
     }
 
-    if (item->pos.y > camera.y + SCREEN_HEIGHT)
+    if (item->pos.y > cameraFieldBottom())
     {
       item->active = false;
       continue;

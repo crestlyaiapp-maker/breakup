@@ -65,6 +65,13 @@
 #endif
 #define FPS 60
 
+// EXPERIMENT: on a short level the paddle rides up to PADDLE_RAISED_GAP below
+// the lowest brick instead of sitting on the bottom edge of a tall screen, and
+// the strip under it is dead space. Set to 0 to get the original placement
+// back. Tall levels and boss fights are never touched.
+#define BREAKUP_RAISED_PADDLE 1
+#define PADDLE_RAISED_GAP 160
+
 // The status bar is drawn over the top of the field rather than beside it, so
 // the ceiling of the world is the bottom of that panel and not the top of the
 // window.

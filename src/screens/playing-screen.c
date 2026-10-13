@@ -398,6 +398,25 @@ void updatePlaying(void)
   updateStatusBar();
 }
 
+// The strip under a raised paddle: dimmed, with a thin edge where the field
+// ends. Nothing is played here, so the touch overlay can put controls on it.
+static void drawFieldDeck(void)
+{
+  float y = cameraFieldBottom() - camera.y;
+  if (y >= SCREEN_HEIGHT - 1)
+  {
+    return;
+  }
+
+  SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+  SDL_SetRenderDrawColor(renderer, 6, 8, 24, 215);
+  SDL_FRect deck = {0, y, SCREEN_WIDTH, SCREEN_HEIGHT - y};
+  SDL_RenderFillRect(renderer, &deck);
+  SDL_SetRenderDrawColor(renderer, 79, 216, 245, 140);
+  SDL_FRect edge = {0, y, SCREEN_WIDTH, 2};
+  SDL_RenderFillRect(renderer, &edge);
+}
+
 static void drawShieldBarrier(void)
 {
   if (!shieldActive())
@@ -411,7 +430,7 @@ static void drawShieldBarrier(void)
     return;
   }
 
-  float y = SCREEN_HEIGHT - 14;
+  float y = cameraFieldBottom() - camera.y - 14;
   float pulse = 0.7f + 0.3f * sinf(gameTime * 8.0f);
 
   SDL_SetTextureColorMod(texGlow, 190, 130, 255);
@@ -553,6 +572,7 @@ void drawPlaying(void)
 
   drawBackground(worldForLevel(paddle.level), paddle.level, camera.y);
   drawPresence();
+  drawFieldDeck();
 
   drawBricks();
   drawBrickItems();

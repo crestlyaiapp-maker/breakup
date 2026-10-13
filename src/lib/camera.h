@@ -38,6 +38,11 @@ void cameraShake(float *outX, float *outY, float *outAngle);
 
 float cameraPunch(void);
 
+// World-Y of the bottom of the playfield: where the safety net sits, where a
+// ball is lost and where falling things stop. It is the bottom edge of the
+// screen unless the paddle has been raised on a short level.
+float cameraFieldBottom(void);
+
 void initializeCamera(void);
 
 void updateCamera(void);

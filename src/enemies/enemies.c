@@ -332,7 +332,7 @@ static void updateEnemyBullets(void)
     // downward, so falling off the floor was the only way out a bullet needed;
     // a boss firing radially sends them up and sideways too, and those would
     // have flown off into the middle distance still holding a slot in the pool.
-    if (b->pos.y > camera.y + SCREEN_HEIGHT ||
+    if (b->pos.y > cameraFieldBottom() ||
         b->pos.y + ENEMY_BULLET_SIZE < camera.y - 40 ||
         b->pos.x + ENEMY_BULLET_SIZE < -40 ||
         b->pos.x > SCREEN_WIDTH + 40)
