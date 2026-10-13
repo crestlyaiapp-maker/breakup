@@ -61,7 +61,7 @@
 #if defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE
 #define SCREEN_HEIGHT 1350
 #else
-#define SCREEN_HEIGHT 600
+#define SCREEN_HEIGHT 1350
 #endif
 #define FPS 60
 
